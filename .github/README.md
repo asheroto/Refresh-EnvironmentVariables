@@ -56,19 +56,15 @@ In PowerShell, type
 Refresh-EnvironmentVariables
 ```
 
+## Alias
+
 If you want to add an alias to the command, you can add the following to your PowerShell profile:
 
 ```powershell
 New-Alias -Name RefreshEnv -Value Refresh-EnvironmentVariables
 ```
 
-The reason we did not make this the default is that it can conflict with Chocolatey's `refreshenv` cmd script.
-
-If you want to remove the old `RefreshEnv` script, you can type
-
-```powershell
-Uninstall-Script RefreshEnv
-```
+Aliases take precedence over functions, cmdlets, and exe/bat/cmd files, so you can type `RefreshEnv` instead of `Refresh-EnvironmentVariables`. The reason we did not make this the default is that to avoid naming conflicts with Chocolatey's `refreshenv` cmd script.
 
 ## Parameters
 
