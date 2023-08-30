@@ -20,7 +20,7 @@ Per the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html), 
 
 ### Method 1 - PowerShell Gallery
 
-**Note:** please use the latest version using Install-Script or the PS1 file from Releases, the version on GitHub itself may be under development and not work properly.
+Please install the latest version using `Install-Script` or the `PS1` file from [Releases](https://github.com/asheroto/Refresh-EnvironmentVariables/releases). The version on GitHub itself may be under development and not work as expected.
 
 Open PowerShell as Administrator and type
 
