@@ -13,7 +13,7 @@ No need to close and reopen PowerShell.
 
 ## Background
 
-This script is derived from [Chocolatey's helper functions](https://github.com/chocolatey/choco/tree/master/src/chocolatey.resources/helpers/functions). The functions have been combined them into one script and some additional functionality has been added.
+This script is derived from [Chocolatey's helper functions](https://github.com/chocolatey/choco/tree/master/src/chocolatey.resources/helpers/functions). The functions have been combined them into one script and some additional functionality has been added. Chocolatey is not required to run `Rrefresh-EnvironmentVariables`.
 
 Per the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html), the original license is included in the script along with the original author attribution, copyright, and changes. To keep things simple, the same license is used in this script. [More info](https://snyk.io/learn/apache-license/)
 ## Setup
