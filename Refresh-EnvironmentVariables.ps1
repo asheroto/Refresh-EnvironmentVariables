@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 1.0.0
+.VERSION 1.0.1
 
 .GUID 9ff8b18d-cc46-449e-81f1-bbdacc3f41b4
 
@@ -8,11 +8,14 @@
 
 .COMPANYNAME asheroto
 
-.TAGS PowerShell Windows refresh reload path env environment variable variables update latest
+.TAGS PowerShell Windows refresh reload path env environment variable variables update current
+
+.PROJECTURI https://github.com/asheroto/Refresh-EnvironmentVariables
 
 .RELEASENOTES
 [Version 0.0.1] - Initial Release.
 [Version 1.0.0] - Total rework of script, implementing Chocolatey's Update-SessionEnvironment function into one single script.
+[Version 1.0.1] - Rename to Refresh-EnvironmentVariables to avoid naming conflicts with Chocolatey's RefreshEnv.cmd.
 
 #>
 
@@ -22,10 +25,18 @@
 .DESCRIPTION
     Refreshes the environment variables in the current PowerShell session.
 .EXAMPLE
-    RefreshEnv
+	Refresh-EnvironmentVariables
+.PARAMETER CheckForUpdate
+    Checks if there is an update available for the script.
+.PARAMETER Version
+    Displays the version of the script.
+.PARAMETER Help
+    Displays the full help information for the script.
 .NOTES
-    Version      : 1.0.0
-    Created by   : asheroto
+	Version      : 1.0.1
+	Created by   : asheroto
+.LINK
+	Project Site: https://github.com/asheroto/Refresh-EnvironmentVariables
 #>
 [CmdletBinding()]
 param (
@@ -38,7 +49,7 @@ param (
 # Copyright © 2017 - 2021 Chocolatey Software, Inc.
 
 # Changes made:
-# - Extracted the functions from the original script for use in RefreshEnv.ps1
+# - Extracted the functions from the original script for use in Refresh-EnvironmentVariables.ps1
 # - Removed Write-FunctionCallLogMessage from Update-SessionEnvironment as it only applies to Chocolatey
 # - Added custom functions
 
@@ -56,9 +67,9 @@ param (
 # limitations under the License.
 
 # Version
-$CurrentVersion = '1.0.0'
+$CurrentVersion = '1.0.1'
 $RepoOwner = 'asheroto'
-$RepoName = 'RefreshEnv'
+$RepoName = 'Refresh-EnvironmentVariables'
 $PowerShellGalleryName = 'RefreshEnv'
 
 # Versions
@@ -289,18 +300,6 @@ None
 None
 #>
 
-    $refreshEnv = $false
-    $invocation = $MyInvocation
-    if ($invocation.InvocationName -eq 'refreshenv') {
-        $refreshEnv = $true
-    }
-
-    if ($refreshEnv) {
-        Write-Output 'Refreshing environment variables from the registry for powershell.exe. Please wait...'
-    } else {
-        Write-Verbose 'Refreshing environment variables from the registry.'
-    }
-
     $userName = $env:USERNAME
     $architecture = $env:PROCESSOR_ARCHITECTURE
     $psModulePath = $env:PSModulePath
@@ -336,10 +335,6 @@ None
     }
     if ($architecture) {
         $env:PROCESSOR_ARCHITECTURE = $architecture;
-    }
-
-    if ($refreshEnv) {
-        Write-Output 'Finished'
     }
 }
 

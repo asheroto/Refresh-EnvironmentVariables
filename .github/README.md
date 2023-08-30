@@ -1,15 +1,15 @@
-![RefreshEnv](PATH)
+![Refresh-EnvironmentVariables](https://github.com/asheroto/Refresh-EnvironmentVariables/assets/49938263/c8a47342-1ccc-4188-91df-9f6073fef3eb)
 
-[![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/asheroto/RefreshEnv)](https://github.com/asheroto/RefreshEnv/releases)
-[![GitHub Downloads - All Releases](https://img.shields.io/github/downloads/asheroto/RefreshEnv/total)](https://github.com/asheroto/RefreshEnv/releases)
+[![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/asheroto/Refresh-EnvironmentVariables)](https://github.com/asheroto/Refresh-EnvironmentVariables/releases)
+[![GitHub Downloads - All Releases](https://img.shields.io/github/downloads/asheroto/Refresh-EnvironmentVariables/total)](https://github.com/asheroto/Refresh-EnvironmentVariables/releases)
 [![GitHub Sponsor](https://img.shields.io/github/sponsors/asheroto?label=Sponsor&logo=GitHub)](https://github.com/sponsors/asheroto)
 <a href="https://ko-fi.com/asheroto"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Ko-Fi Button" height="20px"></a>
 
-# Refresh Environment Variables
+# Refresh-EnvironmentVariables
 
-## Features
--  Refreshes the environment variables in the current PowerShell session
--  No need to close and reopen PowerShell
+Refreshes/reloads the environment variables in the current PowerShell session.
+
+No need to close and reopen PowerShell.
 
 ## Setup
 
@@ -20,14 +20,14 @@
 Open PowerShell as Administrator and type
 
 ```powershell
-Install-Script RefreshEnv -Force
+Install-Script Refresh-EnvironmentVariables -Force
 ```
 
 Follow the prompts to complete the installation (you can tap `A` to accept all prompts or `Y` to select them individually.
 
 **Note:** `-Force` is optional but recommended, as it will force the script to update if it is outdated.
 
-The script is published on [PowerShell Gallery](https://www.powershellgallery.com/packages/RefreshEnv) under `RefreshEnv`.
+The script is published on [PowerShell Gallery](https://www.powershellgallery.com/packages/Refresh-EnvironmentVariables) under `Refresh-EnvironmentVariables`.
 
 ### Tip - How to trust PSGallery
 
@@ -40,16 +40,24 @@ Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 
 ### Method 2 - Download Locally and Run
 
--   Download the latest [RefreshEnv.ps1](https://github.com/asheroto/RefreshEnv/releases/latest/download/RefreshEnv.ps1) from [Releases](https://github.com/asheroto/RefreshEnv/releases)
--   Run the script with `.\RefreshEnv.ps1`
+-   Download the latest [Refresh-EnvironmentVariables.ps1](https://github.com/asheroto/Refresh-EnvironmentVariables/releases/latest/download/Refresh-EnvironmentVariables.ps1) from [Releases](https://github.com/asheroto/Refresh-EnvironmentVariables/releases)
+-   Run the script with `.\Refresh-EnvironmentVariables.ps1`
 
 ## Usage
 
 In PowerShell, type
 
 ```powershell
-RefreshEnv
+Refresh-EnvironmentVariables
 ```
+
+If you want to add an alias to the command, you can add the following to your PowerShell profile:
+
+```powershell
+New-Alias -Name RefreshEnv -Value Refresh-EnvironmentVariables
+```
+
+The reason we did not make this the default is that it can conflict with Chocolatey's `refreshenv` cmd script.
 
 ## Parameters
 
