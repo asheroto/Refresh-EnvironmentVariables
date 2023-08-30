@@ -1,4 +1,4 @@
-![Refresh-EnvironmentVariables](https://github.com/asheroto/Refresh-EnvironmentVariables/assets/49938263/c8a47342-1ccc-4188-91df-9f6073fef3eb)
+![Refresh-EnvironmentVariables](https://github.com/asheroto/Refresh-EnvironmentVariables/assets/49938263/baedbab3-f1c3-4965-9b5e-a9674781093a)
 
 [![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/asheroto/Refresh-EnvironmentVariables)](https://github.com/asheroto/Refresh-EnvironmentVariables/releases)
 [![GitHub Downloads - All Releases](https://img.shields.io/github/downloads/asheroto/Refresh-EnvironmentVariables/total)](https://github.com/asheroto/Refresh-EnvironmentVariables/releases)
@@ -58,6 +58,12 @@ New-Alias -Name RefreshEnv -Value Refresh-EnvironmentVariables
 ```
 
 The reason we did not make this the default is that it can conflict with Chocolatey's `refreshenv` cmd script.
+
+If you want to remove the old `RefreshEnv` script, you can type
+
+```powershell
+Uninstall-Script RefreshEnv
+```
 
 ## Parameters
 
