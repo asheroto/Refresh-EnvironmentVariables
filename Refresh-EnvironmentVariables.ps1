@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 1.0.1
+.VERSION 1.0.2
 
 .GUID 9ff8b18d-cc46-449e-81f1-bbdacc3f41b4
 
@@ -16,6 +16,7 @@
 [Version 0.0.1] - Initial Release.
 [Version 1.0.0] - Total rework of script, implementing Chocolatey's Update-SessionEnvironment function into one single script.
 [Version 1.0.1] - Rename to Refresh-EnvironmentVariables to avoid naming conflicts with Chocolatey's RefreshEnv.cmd.
+[Version 1.0.2] - Fix bug with CheckForUpdate.
 
 #>
 
@@ -33,7 +34,7 @@
 .PARAMETER Help
     Displays the full help information for the script.
 .NOTES
-	Version      : 1.0.1
+	Version      : 1.0.2
 	Created by   : asheroto
 .LINK
 	Project Site: https://github.com/asheroto/Refresh-EnvironmentVariables
@@ -67,10 +68,10 @@ param (
 # limitations under the License.
 
 # Version
-$CurrentVersion = '1.0.1'
+$CurrentVersion = '1.0.2'
 $RepoOwner = 'asheroto'
 $RepoName = 'Refresh-EnvironmentVariables'
-$PowerShellGalleryName = 'RefreshEnv'
+$PowerShellGalleryName = 'Refresh-EnvironmentVariables'
 
 # Versions
 $ProgressPreference = 'SilentlyContinue' # Suppress progress bar (makes downloading super fast)
@@ -86,6 +87,50 @@ if ($Version.IsPresent) {
 if ($Help) {
     Get-Help -Name $MyInvocation.MyCommand.Source -Full
     exit 0
+}
+
+function Get-GitHubRelease {
+    <#
+        .SYNOPSIS
+        Fetches the latest release information of a GitHub repository.
+
+        .DESCRIPTION
+        This function uses the GitHub API to get information about the latest release of a specified repository, including its version and the date it was published.
+
+        .PARAMETER Owner
+        The GitHub username of the repository owner.
+
+        .PARAMETER Repo
+        The name of the repository.
+
+        .EXAMPLE
+        Get-GitHubRelease -Owner "asheroto" -Repo "winget-install"
+        This command retrieves the latest release version and published datetime of the winget-install repository owned by asheroto.
+    #>
+    [CmdletBinding()]
+    param (
+        [string]$Owner,
+        [string]$Repo
+    )
+    try {
+        $url = "https://api.github.com/repos/$Owner/$Repo/releases/latest"
+        $response = Invoke-RestMethod -Uri $url -ErrorAction Stop
+
+        $latestVersion = $response.tag_name
+        $publishedAt = $response.published_at
+
+        # Convert UTC time string to local time
+        $UtcDateTime = [DateTime]::Parse($publishedAt, [System.Globalization.CultureInfo]::InvariantCulture, [System.Globalization.DateTimeStyles]::RoundtripKind)
+        $PublishedLocalDateTime = $UtcDateTime.ToLocalTime()
+
+        [PSCustomObject]@{
+            LatestVersion     = $latestVersion
+            PublishedDateTime = $PublishedLocalDateTime
+        }
+    } catch {
+        Write-Error "Unable to check for updates.`nError: $_"
+        exit 1
+    }
 }
 
 function CheckForUpdate {
