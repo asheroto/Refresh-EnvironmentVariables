@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 1.1.0
+.VERSION 2.0.0
 
 .GUID 9ff8b18d-cc46-449e-81f1-bbdacc3f41b4
 
@@ -18,6 +18,7 @@
 [Version 1.0.1] - Rename to Refresh-EnvironmentVariables to avoid naming conflicts with Chocolatey's RefreshEnv.cmd.
 [Version 1.0.2] - Fix bug with CheckForUpdate.
 [Version 1.1.0] - Fix PATH ordering, prevent overwriting critical environment variables, and remove stale environment variables from session
+[Version 2.0.0] - Total redesign, now supports the ability to remove deleted entries from path.
 
 #>
 
@@ -35,7 +36,7 @@
 .PARAMETER Help
     Displays the full help information for the script.
 .NOTES
-	Version      : 1.1.0
+	Version      : 2.0.0
 	Created by   : asheroto
 .LINK
 	Project Site: https://github.com/asheroto/Refresh-EnvironmentVariables
@@ -44,7 +45,8 @@
 param (
     [switch]$Version,
     [switch]$Help,
-    [switch]$CheckForUpdate
+    [switch]$CheckForUpdate,
+    [switch]$RemoveStale
 )
 
 # Derived from the original work by Chocolatey Software, used in accordance with license
@@ -58,7 +60,7 @@ param (
 # you may not use this file except in compliance with the License.
 
 # Version
-$CurrentVersion = '1.1.0'
+$CurrentVersion = '2.0.0'
 $RepoOwner = 'asheroto'
 $RepoName = 'Refresh-EnvironmentVariables'
 $PowerShellGalleryName = 'Refresh-EnvironmentVariables'
@@ -174,6 +176,9 @@ function Update-SessionEnvironment {
 .SYNOPSIS
 Updates the environment variables of the current powershell session...
 #>
+    param (
+        [switch]$RemoveStale
+    )
 
     $userName = $env:USERNAME
     $architecture = $env:PROCESSOR_ARCHITECTURE
@@ -184,7 +189,13 @@ Updates the environment variables of the current powershell session...
         $ScopeList += 'User'
     }
 
-    $skip = @('PSModulePath','USERNAME','PROCESSOR_ARCHITECTURE','PATH')
+    $skip = @(
+        'PATH', 'PSModulePath', 'USERNAME', 'PROCESSOR_ARCHITECTURE',
+        # Windows login-derived variables (not stored in registry)
+        'USERPROFILE', 'APPDATA', 'LOCALAPPDATA', 'HOMEDRIVE', 'HOMEPATH',
+        'PUBLIC', 'ALLUSERSPROFILE', 'USERDOMAIN', 'USERDOMAIN_ROAMINGPROFILE',
+        'LOGONSERVER', 'SESSIONNAME', 'COMPUTERNAME'
+    )
 
     foreach ($Scope in $ScopeList) {
         Get-EnvironmentVariableNames -Scope $Scope | ForEach-Object {
@@ -200,18 +211,20 @@ Updates the environment variables of the current powershell session...
     # PATH fix
     $machinePath = Get-EnvironmentVariable -Name 'PATH' -Scope Machine
     $userPath = Get-EnvironmentVariable -Name 'PATH' -Scope User
-    $env:PATH = @($machinePath,$userPath) -join ';'
+    $env:PATH = @($machinePath, $userPath) -join ';'
 
     # Remove stale variables
-    $validNames = @()
-    $validNames += Get-EnvironmentVariableNames -Scope Machine
-    $validNames += Get-EnvironmentVariableNames -Scope User
-    $validNames = $validNames | Select-Object -Unique
+    if ($RemoveStale) {
+        $validNames = @()
+        $validNames += Get-EnvironmentVariableNames -Scope Machine
+        $validNames += Get-EnvironmentVariableNames -Scope User
+        $validNames = $validNames | Select-Object -Unique
 
-    Get-ChildItem Env: | ForEach-Object {
-        if ($skip -contains $_.Name) { return }
-        if ($validNames -notcontains $_.Name) {
-            Remove-Item "Env:$($_.Name)" -ErrorAction SilentlyContinue
+        Get-ChildItem Env: | ForEach-Object {
+            if ($skip -contains $_.Name) { return }
+            if ($validNames -notcontains $_.Name) {
+                Remove-Item "Env:$($_.Name)" -ErrorAction SilentlyContinue
+            }
         }
     }
 
@@ -221,5 +234,5 @@ Updates the environment variables of the current powershell session...
 }
 
 Write-Output "Refreshing environment variables..."
-Update-SessionEnvironment
+Update-SessionEnvironment -RemoveStale:$RemoveStale
 Write-Output "Finished"
