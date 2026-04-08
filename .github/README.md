@@ -10,12 +10,6 @@
 
 Refreshes/reloads the environment variables in the current PowerShell session without needing to close and reopen PowerShell.
 
-## Background
-
-This script is derived from [Chocolatey's helper functions](https://github.com/chocolatey/choco/tree/master/src/chocolatey.resources/helpers/functions). The functions have been combined into one script with additional functionality. Chocolatey is not required to run `Refresh-EnvironmentVariables`.
-
-Per the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html), the original license is included in the script along with the original author attribution, copyright, and changes. [More info](https://snyk.io/learn/apache-license/)
-
 ## How It Works
 
 The script reads environment variables directly from the Windows registry (`HKCU\Environment` for user scope, `HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment` for machine scope) and applies them to the current session.
